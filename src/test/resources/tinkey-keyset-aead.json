@@ -1,0 +1,25 @@
+{
+  "primaryKeyId": 613509273,
+  "key": [
+    {
+      "keyData": {
+        "typeUrl": "type.googleapis.com/google.crypto.tink.AesGcmKey",
+        "value": "GhDx8O+2oEaTTdeYvALat6KD",
+        "keyMaterialType": "SYMMETRIC"
+      },
+      "status": "ENABLED",
+      "keyId": 613509273,
+      "outputPrefixType": "TINK"
+    },
+    {
+      "keyData": {
+        "typeUrl": "type.googleapis.com/google.crypto.tink.ChaCha20Poly1305Key",
+        "value": "EiCGQUyLeRn/8p4cptLvMHAlojCmC3KEUBdhtbJ5hUxa+Q==",
+        "keyMaterialType": "SYMMETRIC"
+      },
+      "status": "ENABLED",
+      "keyId": 1514572033,
+      "outputPrefixType": "TINK"
+    }
+  ]
+}

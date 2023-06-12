@@ -1,0 +1,15 @@
+{
+  "primaryKeyId": 804409101,
+  "key": [
+    {
+      "keyData": {
+        "typeUrl": "type.googleapis.com/google.crypto.tink.HpkePrivateKey",
+        "value": "EksSBggCEAEYARpBBJy8gW9i/XdVWU9W5s5OvvmGtUJpo7+vkJd60z23GBuD+IGd7reEaYF+l+Zg4wn5L0EzmMQRDnNOElabD4dEsnQaIQCSqV+qK9yfVcQVGLZF1PKEnDjd66gcNeqJUPTFMRPqrQ==",
+        "keyMaterialType": "ASYMMETRIC_PRIVATE"
+      },
+      "status": "ENABLED",
+      "keyId": 804409101,
+      "outputPrefixType": "TINK"
+    }
+  ]
+}
