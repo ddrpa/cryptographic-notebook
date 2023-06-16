@@ -7,6 +7,7 @@ import com.google.crypto.tink.CleartextKeysetHandle;
 import com.google.crypto.tink.JsonKeysetReader;
 import com.google.crypto.tink.KeysetHandle;
 import com.google.crypto.tink.aead.AeadConfig;
+import com.google.crypto.tink.subtle.AesGcmJce;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -73,9 +75,37 @@ class EncryptionSmallDataSetTests {
         }
     }
 
+    /**
+     * 展示通过调用内部类的方法避开密钥集的概念后通过 Tink 加密的方法
+     * 适用于和第三方对接时，第三方不支持密钥集的情况
+     *
+     * @throws GeneralSecurityException
+     */
+    @Test
+    void useTinkWithoutKeysetTest() throws GeneralSecurityException {
+        String sharedKey = "f1f0efb6a046934dd798bc02dab7a283";
+
+        byte[] key = BaseEncoding.base16().lowerCase().decode(sharedKey);
+        System.out.println("Key: " + BaseEncoding.base16().lowerCase().encode(key));
+        AesGcmJce aesGcmJce = new AesGcmJce(key);
+        byte[] cipherText = aesGcmJce.encrypt(PLAIN_TEXT.getBytes(StandardCharsets.UTF_8), associatedData);
+        // 密文长度等于 iv 长度 + 明文长度 + tag 长度
+        assertEquals(12 + PLAIN_TEXT.getBytes(StandardCharsets.UTF_8).length + 16, cipherText.length);
+        String cipherTextForTransport = BaseEncoding.base16().lowerCase().encode(cipherText);
+        System.out.println("Ciphertext: " + cipherTextForTransport);
+
+        Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+        byte[] receivedCipherText = BaseEncoding.base16().lowerCase().decode(cipherTextForTransport);
+        byte[] nonce = Arrays.copyOfRange(receivedCipherText, 0, 12);
+        byte[] actualCipherText = Arrays.copyOfRange(receivedCipherText, 12, receivedCipherText.length);
+        cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(BaseEncoding.base16().lowerCase().decode(sharedKey), "AES"), new GCMParameterSpec(128, nonce));
+        cipher.updateAAD(associatedData);
+        byte[] decrypted = cipher.doFinal(actualCipherText);
+        assertEquals(PLAIN_TEXT, new String(decrypted, StandardCharsets.UTF_8));
+    }
+
     @Test
     void analyzeCipherTextTest() throws GeneralSecurityException, IOException {
-        String clearTextKey = "GhDx8O+2oEaTTdeYvALat6KD";
         byte[] key = new byte[]{-15, -16, -17, -74, -96, 70, -109, 77, -41, -104, -68, 2, -38, -73, -94, -125};
         byte[] cipherText = BaseEncoding.base16().lowerCase().decode("0124916899acd80ed748581c85deb53c09732217edde8877cb5dbad21240d6b28bcf8cbe65c6f17d917527121a8c");
         System.out.println("明文长度：" + PLAIN_TEXT.getBytes(StandardCharsets.UTF_8).length);
