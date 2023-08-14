@@ -1,4 +1,4 @@
-package cc.ddrpa;
+package cc.ddrpa.sm;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.jupiter.api.Test;
@@ -15,6 +15,13 @@ import java.security.*;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/**
+ * GB/T 32907-2016 信息安全技术 SM4 分组密码算法
+ * https://std.samr.gov.cn/gb/search/gbDetailed?id=71F772D81199D3A7E05397BE0A0AB82A
+ * <p>
+ * SM4 密码算法是一个分组算法。该算法的分组长度为 128 比特,密钥长度为 128 比特。加密算法与密钥扩展算法均采用非线性迭代结构，
+ * 运算轮数均为 32 轮。数据解密和数据加密的算法结构相同，只是轮密钥的使用顺序相反,解密轮密钥是加密轮密钥的逆序。
+ */
 class SymmetricEncryptionWithSM4Tests {
     static {
         Security.addProvider(new BouncyCastleProvider());
@@ -22,11 +29,7 @@ class SymmetricEncryptionWithSM4Tests {
 
     private static final SecureRandom random = new SecureRandom();
 
-    private static final String PLAIN_TEXT = """
-            This Recommendation specifies the Galois/Counter Mode (GCM), an algorithm for\s
-            authenticated encryption with associated data, and its specialization, GMAC, for generating a\s
-            message authentication code (MAC) on data that is not encrypted. GCM and GMAC are modes\s
-            of operation for an underlying approved symmetric key block cipher.""";
+    private static final String PLAIN_TEXT = "SM4 密码算法是一个分组算法。该算法的分组长度为 128 比特,密钥长度为 128 比特。加密算法与密钥扩展算法均采用非线性迭代结构，运算轮数均为 32 轮。数据解密和数据加密的算法结构相同，只是轮密钥的使用顺序相反,解密轮密钥是加密轮密钥的逆序。";
 
     private static byte[] generateRandomBytes(int lengthInBits) {
         byte[] bytes = new byte[lengthInBits / 8];
@@ -34,6 +37,7 @@ class SymmetricEncryptionWithSM4Tests {
         return bytes;
     }
 
+    private static final Integer SM4_KEY_SIZE_IN_BITS = 128;
     private static final Integer GCM_IV_SIZE_IN_BITS = 96;
     private static final Integer GCM_TAG_SIZE_IN_BITS = 128;
 
@@ -50,7 +54,7 @@ class SymmetricEncryptionWithSM4Tests {
     @Test
     void SM4GCMNoPaddingTest() throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
         // 通常情况下 key 应当秘密地获取
-        byte[] key = generateRandomBytes(128);
+        byte[] key = generateRandomBytes(SM4_KEY_SIZE_IN_BITS);
         // nonce 不需要加密，且应当随 cipher text 一起存储
         byte[] nonce = generateRandomBytes(GCM_IV_SIZE_IN_BITS);
         byte[] plainText = PLAIN_TEXT.getBytes(StandardCharsets.UTF_8);
