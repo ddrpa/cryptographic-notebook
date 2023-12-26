@@ -13,9 +13,12 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>17</maven.compiler.source>
-    <maven.compiler.target>17</maven.compiler.target>
     <java.version>17</java.version>
+    <maven.compiler.source>${java.version}</maven.compiler.source>
+    <maven.compiler.target>${java.version}</maven.compiler.target>
+    <tink.version>1.12.0</tink.version>
+    <bouncycastle.version>1.77</bouncycastle.version>
+    <guava.version>33.0.0-jre</guava.version>
   </properties>
 
   <dependencies>
@@ -23,7 +26,7 @@
     <dependency>
       <groupId>com.google.crypto.tink</groupId>
       <artifactId>tink</artifactId>
-      <version>1.9.0</version>
+      <version>${tink.version}</version>
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-crypto -->
     <dependency>
@@ -35,7 +38,7 @@
     <dependency>
       <groupId>org.bouncycastle</groupId>
       <artifactId>bcprov-jdk18on</artifactId>
-      <version>1.73</version>
+      <version>${bouncycastle.version}</version>
     </dependency>
     <!-- https://mvnrepository.com/artifact/commons-logging/commons-logging -->
     <dependency>
@@ -47,7 +50,7 @@
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
-      <version>31.1-jre</version>
+      <version>${guava.version}</version>
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
     <dependency>
